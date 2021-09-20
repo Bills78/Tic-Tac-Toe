@@ -3,8 +3,6 @@ const body = document.querySelector('body');
 const gameBoard = () => {
     let squares = new Array(9);
     
-
-
     const makeBoard = () => {
         const field = document.createElement('div');
         field.classList.add('field');
@@ -25,6 +23,13 @@ const gameBoard = () => {
 
 gameBoard().makeBoard();
 
+const player = (marker) => {
+    return {marker}
+};
+
+const player1 = player('X');
+const player2 = player('O');
+
 const flow = (() => {
     let square1 = document.getElementById('1');
     let square2 = document.getElementById('2');
@@ -36,15 +41,15 @@ const flow = (() => {
     let square8 = document.getElementById('8');
     let square9 = document.getElementById('9');
 
-    let sqrContent = 'X';
+    let sqrContent = player1.marker;
 
     const listener = ((sqr) => {
         sqr.addEventListener('click', () => {
-            sqr.textContent = sqrContent
-            if (sqrContent === 'X') {
-                sqrContent = 'O'
+            sqr.textContent = sqrContent;
+            if (sqrContent == player1.marker) {
+                sqrContent = player2.marker
             } else {
-                sqrContent = 'X'
+                sqrContent = player1.marker
             }
         })
     })
