@@ -41,19 +41,6 @@ const gameBoard = () => {
 gameBoard().makeBoard();
 
 const flow = (() => {
-
-    const draw = () => {
-        for(let i = 0; i < gameBoard().squares.length; i++) {
-            if (gameBoard().squares[i] === player1.marker ||
-                gameBoard().squares[i] === player2.marker) {
-                    const h2 = document.createElement('h2');
-                    h2.classList.add('winner');
-                    h2.textContent = 'Draw!';
-                    body.append(h2);
-                }
-        }
-    }
-
     const winOptionsX = (num1, num2, num3) => {
         if (gameBoard().squares[num1].innerText === player1.marker && 
         gameBoard().squares[num2].innerText === player1.marker && 
@@ -63,7 +50,8 @@ const flow = (() => {
         h2.textContent = 'X is Winner!';
         body.append(h2);
         }
-    }
+    };
+
     const winOptionsO = (num1, num2, num3) => {
         if (gameBoard().squares[num1].innerText === player2.marker && 
         gameBoard().squares[num2].innerText === player2.marker && 
@@ -73,7 +61,7 @@ const flow = (() => {
         h2.textContent = 'O is Winner!';
         body.append(h2);
         } 
-    }
+    };
 
     const winner = () => {
         winOptionsX(0, 1, 2);
@@ -95,9 +83,24 @@ const flow = (() => {
         winOptionsO(2, 4, 6);
     };
 
-    let sqrContent = player1.marker;
+    let squares = gameBoard().squares;
 
-    gameBoard().squares.forEach(square => {
+    const draw = () => {
+        function isFilled(sqr) {
+            return sqr.textContent === 'X' || sqr.textContent === 'O';
+        }
+
+        if (squares.every(isFilled)) {
+                const h2 = document.createElement('h2');
+                h2.classList.add('winner');
+                h2.textContent = 'Draw';
+                body.append(h2);
+        }
+    };
+
+    let sqrContent = player1.marker;
+    
+    squares.forEach(square => {
             square.addEventListener('click', () => {
                 square.textContent = sqrContent;
                 if (sqrContent == player1.marker) {
@@ -110,5 +113,5 @@ const flow = (() => {
             })
         });
 
-    return { winner }
+    return { winner, draw }
 })();
