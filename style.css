@@ -37,3 +37,15 @@ h2 {
     justify-content: center;
     font-size: 5em;
 }
+
+.modal {
+    z-index: 999;
+    position: absolute;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .95);
+}

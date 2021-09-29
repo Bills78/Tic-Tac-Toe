@@ -1,4 +1,5 @@
 const body = document.querySelector('body');
+const modal = document.querySelector('#modal');
 
 const player = (marker) => {
     return {marker}
@@ -41,14 +42,29 @@ const gameBoard = () => {
 gameBoard().makeBoard();
 
 const flow = (() => {
+    function reset() {
+        const resetBtn = document.createElement('button');
+        resetBtn.textContent = 'Play Again?';
+        modal.append(resetBtn);
+        resetBtn.addEventListener('click', () => {
+            window.location.reload();
+        })
+    };
+
+    const gameOver = (result) => {
+        const h2 = document.createElement('h2');
+        h2.textContent = `${result}`
+        modal.classList.add('modal')
+        modal.append(h2);
+        reset();
+    };
+
+
     const winOptionsX = (num1, num2, num3) => {
         if (gameBoard().squares[num1].innerText === player1.marker && 
         gameBoard().squares[num2].innerText === player1.marker && 
         gameBoard().squares[num3].innerText === player1.marker) {
-        const h2 = document.createElement('h2');
-        h2.classList.add('winner');
-        h2.textContent = 'X is Winner!';
-        body.append(h2);
+            gameOver('X is Winner');
         }
     };
 
@@ -56,10 +72,7 @@ const flow = (() => {
         if (gameBoard().squares[num1].innerText === player2.marker && 
         gameBoard().squares[num2].innerText === player2.marker && 
         gameBoard().squares[num3].innerText === player2.marker) {
-        const h2 = document.createElement('h2');
-        h2.classList.add('winner');
-        h2.textContent = 'O is Winner!';
-        body.append(h2);
+            gameOver('O is winner');
         } 
     };
 
@@ -84,24 +97,18 @@ const flow = (() => {
     };
 
     let squares = gameBoard().squares;
-
     const draw = () => {
         function isFilled(sqr) {
             return sqr.textContent === 'X' || sqr.textContent === 'O';
         }
-
-        if (squares.every(isFilled)) {
-                const h2 = document.createElement('h2');
-                h2.classList.add('winner');
-                h2.textContent = 'Draw';
-                body.append(h2);
+        if (squares.every(isFilled) && !winner()) {
+            gameOver('Draw');
         }
     };
 
     let sqrContent = player1.marker;
-    
     squares.forEach(square => {
-            square.addEventListener('click', () => {
+            square.addEventListener('click', function handler() {
                 square.textContent = sqrContent;
                 if (sqrContent == player1.marker) {
                     sqrContent = player2.marker
@@ -110,8 +117,9 @@ const flow = (() => {
                 }
                 winner();
                 draw();
+                this.removeEventListener('click', handler)
             })
         });
-
+        
     return { winner, draw }
 })();
